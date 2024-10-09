@@ -104,10 +104,10 @@ def task2_8(program):
 					if prev_altitude is not None and prev_altitude != -777:
 						if curr_altitude > prev_altitude:
 							total_gain += (curr_altitude - prev_altitude) * 0.3048
-							total_gain = int(total_gain)
 					prev_altitude = curr_altitude
 				else:
 					continue
+		total_gain = int(total_gain)
 		user_altitude_gain[user_id] = total_gain
 	top_20_users = sorted(user_altitude_gain.items(), key=lambda x: x[1], reverse=True)[:20]
 	print(tabulate(top_20_users, headers=['id', 'total meters gained per user']))
@@ -138,7 +138,7 @@ def main():
 		# task2_4(program)
 		# task2_6a(program)
 		# task2_6b(program)
-		# task2_8(program)
+		task2_8(program)
 		# task2_10(program)
 	except Exception as e:
 		print("ERROR:", e)
