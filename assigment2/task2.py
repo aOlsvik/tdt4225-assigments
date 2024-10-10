@@ -165,6 +165,7 @@ def task2_6b(program):
 	rows = program.cursor.fetchall()
 	print(tabulate(rows, headers=program.cursor.column_names))
 
+
 def task2_8(program):
 	# find the top 20 users who have gained the most altitude meters
 	# output should be a table with (id, total meters gained per user)
@@ -202,10 +203,11 @@ def task2_8(program):
 				if curr_altitude != -777:
 					if prev_altitude is not None and prev_altitude != -777:
 						if curr_altitude > prev_altitude:
-							total_gain += (curr_altitude - prev_altitude)
+							total_gain += (curr_altitude - prev_altitude) * 0.3048
 					prev_altitude = curr_altitude
 				else:
 					continue
+		total_gain = int(total_gain)
 		user_altitude_gain[user_id] = total_gain
 	top_20_users = sorted(user_altitude_gain.items(), key=lambda x: x[1], reverse=True)[:20]
 	print(tabulate(top_20_users, headers=['id', 'total meters gained per user']))
@@ -220,8 +222,8 @@ def task2_10(program):
 	FROM user u
 	JOIN activity a ON u.id = a.user_id
 	JOIN trackpoint t ON a.id = t.activity_id
-	WHERE t.lat BETWEEN 39.915 AND 39.917
-	AND t.lon BETWEEN 116.396 AND 116.398;
+	WHERE t.lat BETWEEN 39.912 AND 39.920
+	AND t.lon BETWEEN 116.394 AND 116.400;
 	"""
 	program.cursor.execute(query)
 	rows = program.cursor.fetchall()
@@ -242,7 +244,7 @@ def main():
 		# task2_8(program)
 		# task2_9(program)
 		# task2_10(program)
-		task2_11(program)
+		# task2_11(program)
 
 
 	except Exception as e:
