@@ -3,3 +3,7 @@ __pycache__
 dataset
 db
 *.pdf
+delivery_code_*
+*.zip
+**/.venv*
+**/mongodb
