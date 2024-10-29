@@ -65,8 +65,8 @@ def insert_activities_and_trackpoints(program, inserted_users):
                 lines = f.readlines()
                 lines = lines[1:]
                 for index, line in enumerate(lines):
-                    start_time = line.split("\t")[0].replace("/", "-")
-                    end_time = line.split("\t")[1].replace("/", "-")
+                    start_time = datetime.datetime.strptime(line.split("\t")[0], "%Y/%m/%d %H:%M:%S")
+                    end_time = datetime.datetime.strptime(line.split("\t")[1], "%Y/%m/%d %H:%M:%S")
                     mode = line.split("\t")[2].strip()
                     for activity in insert_activites:
                         if activity['start_date_time'] == start_time and activity['end_date_time'] == end_time:
