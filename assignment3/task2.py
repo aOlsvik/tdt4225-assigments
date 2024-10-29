@@ -24,7 +24,15 @@ def task2_2():
         {"$group": {"_id": None, "average_activities": {"$avg": "$activity_count"}}}
     ]
     result = list(db["activity"].aggregate(query))
-    pprint("Average activities per user:", result[0]["average_activities"])
+    print("Average activities per user (only counting users with activites):", round(result[0]["average_activities"], 2))
+    
+    # Calculate total activities and total users
+    total_activities = db["activity"].count_documents({})
+    total_users = db["user"].count_documents({})
+
+    # Calculate average activities per user including users with zero activities
+    avg_activities_per_user = total_activities / total_users if total_users > 0 else 0
+    print("Average activities per user (including users with zero activities):", round(avg_activities_per_user, 2))
 
 def task2_3():
     # Find the top 20 users with the most activities
@@ -41,7 +49,8 @@ def task2_4():
     # Users who have taken a taxi 
     query = {"transportation_mode": "taxi"}
     users = db["activity"].distinct("user_id", query)
-    pprint("Users who have taken a taxi:", users)
+    print("Users who have taken a taxi:")
+    pprint(users)
 
 def task2_5():
     # Transportation mode count
@@ -133,11 +142,10 @@ def task2_8():
         
 def main():
     try:
-        print(db.list_collection_names())
-        task2_1()
+        # task2_1()
         # task2_2()
         # task2_3()
-        # task2_4()
+        task2_4()
         # task2_5()
         # task2_6a()
         # task2_6b()
