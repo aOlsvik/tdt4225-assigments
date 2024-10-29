@@ -1,6 +1,7 @@
 from Program import Program
 from pprint import pprint 
 import os
+import datetime
 
 
 def insert_users(program):
@@ -12,7 +13,7 @@ def insert_users(program):
     insert_users = [
         {
             '_id': user_id,
-            'labeled': labeled_data
+            'has_labels': labeled_data
         } 
                     for user_id, labeled_data in insert_ids]
     
@@ -44,21 +45,22 @@ def insert_activities_and_trackpoints(program, inserted_users):
                 insert_activites.append({
                     '_id': activity_id,
                     'user_id': user['_id'],
-                    'start_date_time': lines[0][5] + " " + lines[0][6],
-                    'end_date_time': lines[-1][5] + " " + lines[-1][6]
+                    'start_date_time': datetime.datetime.strptime(lines[0][5] + " " + lines[0][6], "%Y-%m-%d %H:%M:%S"),
+                    'end_date_time': datetime.datetime.strptime(lines[-1][5] + " " + lines[-1][6], "%Y-%m-%d %H:%M:%S"),
                 })
                 trackpoints = [
                     {
                         'lat': float(line[0]),
                         'lon': float(line[1]),
                         'altitude': float(line[3]),
-                        'datetime': line[5] + " " + line[6],
+                        'date_days': float(line[4]),
+                        'date_time': datetime.datetime.strptime(line[5] + " " + line[6], "%Y-%m-%d %H:%M:%S"),
                         'activity_id': activity_id
                     } for line in lines
                 ]
                 insert_trackpoints.extend(trackpoints)
                 
-        if user['labeled'] == 1:
+        if user['has_labels'] == 1:
             with open(f"{dir}/labels.txt", "r") as f:
                 lines = f.readlines()
                 lines = lines[1:]
