@@ -80,7 +80,9 @@ def task2_6b():
         {"$limit": 1}
     ]
     year_most_hours = list(db["activity"].aggregate(query))
-    pprint("Year with the most recorded hours:", year_most_hours[0]["_id"], "with", year_most_hours[0]["total_hours"], "hours")
+    print("Year with the most recorded hours:")
+    pprint(year_most_hours[0]["_id"])
+    pprint(year_most_hours[0]["total_hours"])
 
 def task2_7():
     # Total distance walked in 2008 by user with id=112
@@ -99,7 +101,7 @@ def task2_7():
             p1 = (trackpoints[i - 1]["lat"], trackpoints[i - 1]["lon"])
             p2 = (trackpoints[i]["lat"], trackpoints[i]["lon"])
             total_distance += haversine(p1, p2, unit=Unit.KILOMETERS)
-    pprint(f"Total distance walked by user {user_id} in 2008: {total_distance:.2f} km")
+    print(f"Total distance walked by user {user_id} in 2008: {total_distance:.2f} km")
 
 def task2_8():
     # Top 20 users who have gained the most altitude meters
@@ -140,9 +142,9 @@ def main():
         # task2_1()
         # task2_2()
         # task2_3()
-        # task2_4()
+        task2_4()
         # task2_5()
-        task2_6a()
+        # task2_6a()
         # task2_6b()
         # task2_7()
         # task2_8()
