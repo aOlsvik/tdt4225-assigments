@@ -24,7 +24,8 @@ def task2_2():
         {"$group": {"_id": None, "average_activities": {"$avg": "$activity_count"}}}
     ]
     result = list(db["activity"].aggregate(query))
-    pprint("Average activities per user:", result[0]["average_activities"])
+    print("Average activities per user:")
+    pprint(result[0]["average_activities"])
 
 def task2_3():
     # Find the top 20 users with the most activities
@@ -34,14 +35,16 @@ def task2_3():
         {"$limit": 20}
     ]
     top_users = list(db["activity"].aggregate(query))
-    for user in top_users:
-        pprint(f"User ID: {user['_id']}, Activities: {user['activity_count']}")
+    pprint(top_users)
+    # for user in top_users:
+    #     pprint(f"User ID: {user['_id']}, Activities: {user['activity_count']}")
 
 def task2_4():
     # Users who have taken a taxi 
     query = {"transportation_mode": "taxi"}
     users = db["activity"].distinct("user_id", query)
-    pprint("Users who have taken a taxi:", users)
+    print("Users who have taken a taxi:")
+    pprint(users)
 
 def task2_5():
     # Transportation mode count
@@ -61,7 +64,7 @@ def task2_6a():
         {"$limit": 1}
     ]
     most_active_year = list(db["activity"].aggregate(query))
-    pprint("Year with the most activities:", most_active_year[0]["_id"], "with", most_active_year[0]["activity_count"], "activities")
+    print("Year with the most activities:", most_active_year[0]["_id"], "with", most_active_year[0]["activity_count"], "activities")
 
 def task2_6b():
     # year with most recorded hours
@@ -134,12 +137,12 @@ def task2_8():
 def main():
     try:
         print(db.list_collection_names())
-        task2_1()
+        # task2_1()
         # task2_2()
         # task2_3()
         # task2_4()
         # task2_5()
-        # task2_6a()
+        task2_6a()
         # task2_6b()
         # task2_7()
         # task2_8()
