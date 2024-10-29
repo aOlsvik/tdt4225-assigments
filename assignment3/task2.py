@@ -101,15 +101,15 @@ def task2_8(program):
     # Dictionary to store total altitude gain for each user
     altitude_gain_by_user = {}
 
-    # Step 1: Loop through each user
+    # Loop through each user
     for user in db["User"].find():
         user_id = user["_id"]
         total_altitude_gain = 0.0
 
-        # Step 2: Retrieve and sort the user's trackpoints by date_time
+        # Retrieve and sort the user's trackpoints by date_time
         trackpoints = list(db["TrackPoint"].find({"user_id": user_id, "altitude": {"$gt": -777}}).sort("date_time", 1))
 
-        # Step 3: Calculate altitude gain
+        # Calculate altitude gain
         for i in range(1, len(trackpoints)):
             previous_altitude = trackpoints[i - 1]["altitude"]
             current_altitude = trackpoints[i]["altitude"]
@@ -120,9 +120,10 @@ def task2_8(program):
         # Store the total altitude gain for this user
         altitude_gain_by_user[user_id] = total_altitude_gain
 
-    # Step 4: Sort users by altitude gain and get the top 20
+    # Sort users by altitude gain and get the top 20
     top_users = sorted(altitude_gain_by_user.items(), key=lambda x: x[1], reverse=True)[:20]
 
-    # Step 5: Print results
+    # Print results
     for user_id, altitude_gain in top_users:
         print(f"User ID: {user_id}, Altitude Gain: {altitude_gain} meters")
+
