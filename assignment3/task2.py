@@ -52,8 +52,6 @@ def task2_4():
     users = db["activity"].distinct("user_id", query)
     print("Users who have taken a taxi:")
     pprint(users)
-    print("Users who have taken a taxi:")
-    pprint(users)
 
 def task2_5():
     # Transportation mode count
@@ -112,45 +110,64 @@ def task2_7():
             total_distance += haversine(p1, p2, unit=Unit.KILOMETERS)
     print(f"Total distance walked by user {user_id} in 2008: {total_distance:.2f} km")
 
+
+
 def task2_8():
     # Top 20 users who have gained the most altitude meters
     # Dictionary to store total altitude gain for each user
     altitude_gain_by_user = {}
 
-    # Step 1: Loop through each user
+    # Loop through each user
     for user in db["user"].find():
+        print(f"Processing user: {user}")
         user_id = user["_id"]
         total_altitude_gain = 0.0
 
-        # Step 2: Retrieve and sort the user's trackpoints by date_time
-        trackpoints = list(db["trackpoint"].find({"user_id": user_id, "altitude": {"$gt": -777}}).sort("date_time", 1))
+        # Define the activity ID prefix based on the user_id (first three digits of activity_id)
+        activity_prefix = str(user_id).zfill(3)  # Ensure the prefix is 3 digits, zero-padded if necessary
 
-        # Calculate altitude gain
-        for i in range(1, len(trackpoints)):
-            previous_altitude = trackpoints[i - 1]["altitude"]
-            current_altitude = trackpoints[i]["altitude"]
+        # Retrieve activities for this user based on the prefix
 
-            if current_altitude > previous_altitude:
-                total_altitude_gain += (current_altitude - previous_altitude)
+
+        # Step 4: Retrieve and sort trackpoints for the current activity
+        trackpoints = db["trackpoint"].find(
+            {"activity_id": {"$regex": f"^{activity_prefix}"}, "altitude": {"$ne": -777}}
+        ).sort("date_time", 1)
+
+        # Calculate altitude gain for this activity
+        activity_altitude_gain = 0.0
+        previous_activity_id = None
+        for trackpoint in trackpoints:
+            if trackpoint["activity_id"] != previous_activity_id:
+                previous_altitude = None
+            current_altitude = trackpoint["altitude"] * 0.3048  # Convert altitude from feet to meters
+
+            if previous_altitude is not None and current_altitude > previous_altitude:
+                activity_altitude_gain += (current_altitude - previous_altitude)
+
+            previous_altitude = current_altitude  # Update previous altitude for the next iteration
+            previous_activity_id = trackpoint["activity_id"]
+
+        # Add this activity's altitude gain to the user's total
+        total_altitude_gain += activity_altitude_gain
 
         # Store the total altitude gain for this user
         altitude_gain_by_user[user_id] = total_altitude_gain
+        print(f"User ID: {user_id}, Total Altitude Gain: {total_altitude_gain:.2f} meters")
 
     # Sort users by altitude gain and get the top 20
     top_users = sorted(altitude_gain_by_user.items(), key=lambda x: x[1], reverse=True)[:20]
 
     # Print results
     for user_id, altitude_gain in top_users:
-        print(f"User ID: {user_id}, Altitude Gain: {altitude_gain} meters")
-        
-        
-        
+        print(f"User ID: {user_id}, Altitude Gain: {altitude_gain:.2f} meters")
+
 def main():
     try:
-        # task2_1()
+        task2_1()
         # task2_2()
         # task2_3()
-        task2_4()
+        # task2_4()
         # task2_5()
         # task2_6a()
         # task2_6b()
